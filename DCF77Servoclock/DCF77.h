@@ -22,7 +22,7 @@
 /**
  * Turn debugging on or off
  */
-#define DCF_DEBUG 1
+// #define DCF_DEBUG
 /**
  * Number of milliseconds to elapse before we assume a "1",
  * if we receive a falling flank before - its a 0.
@@ -37,16 +37,23 @@
  * DCF time format struct
  */
 struct DCF77Buffer {
-		unsigned long long prefix	:21	;
+//		unsigned long long prefix	:21	;
+                unsigned long long wheather     :15     ;       // 14 bits Wetter
+                unsigned long long R            :1      ;       // Rufbit
+                unsigned long long A1           :1      ;       // A1 Ankündigung Sommer-/Winterzeit
+                unsigned long long Z            :2      ;       // Zeitzone
+                unsigned long long A2           :1      ;       // A2 Ankündigung Schaltsekunde
+                unsigned long long S            :1      ;       // Startbit Zeitinfo (immer HIGH)
+                
 		unsigned long long Min		:7	;	//7 Bits für die Minuten
-		unsigned long long P1			:1	;	//Parity Minuten
+		unsigned long long P1		:1	;	//Parity Minuten
 		unsigned long long Hour		:6	;	//6 Bits für die Stunden
-		unsigned long long P2			:1	;	//Parity Stunden
+		unsigned long long P2		:1	;	//Parity Stunden
 		unsigned long long Day		:6	;	//6 Bits für den Tag
 		unsigned long long Weekday	:3	;	//3 Bits für den Wochentag 
-		unsigned long long Month		:5	;	//3 Bits für den Monat
+		unsigned long long Month	:5	;	//3 Bits für den Monat
 		unsigned long long Year		:8	;	//8 Bits für das Jahr **eine 5 für das Jahr 2005**
-		unsigned long long P3			:1	;	//Parity von P2
+		unsigned long long P3		:1	;	//Parity von P2
 };
 
 class DCF77 {	
@@ -67,6 +74,13 @@ class DCF77 {
 		unsigned char day;
 		unsigned char mon;
 		unsigned int year;
+                unsigned char weekday;
+
+                unsigned char minValid;
+                unsigned char hourValid;
+                unsigned char dateValid;
+                unsigned char startBitValid;
+                
 	  /**
 	   * Initialize the DCF77 library. Provide the pin number of the 
 	   * pin where the DCF77 signal occurs.
